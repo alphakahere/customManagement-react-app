@@ -1,7 +1,7 @@
-import React, { useState } from 'react'
 import axios from 'axios'
+import React, { useEffect, useState } from 'react'
 
-const AddClient = () => {
+const EditClient = (route) => {
     const initialData = {
         name: '',
         pseudo: '',
@@ -9,35 +9,54 @@ const AddClient = () => {
         location: '',
         status: 'false'
     }
-
     const [client, setClient] = useState(initialData)
+    const [loading, setloading] = useState(true)
 
-    const {name, pseudo, phone, location} = client
+   
 
+    const {name, pseudo, status, phone, location} = client
+
+    useEffect(() => {
+        const currentClientId =  route.match.params.id
+
+        axios.get(`http://localhost:8000/api/editclient/${currentClientId}`).then((res) => {
+            setClient(res.data.client)
+            setloading(false)
+        })
+    }, [route])
     const handleChange = e => {
         setClient({...client, [e.target.id]:e.target.value})
     }
 
     const handleSubmit = async(e) => {
         e.preventDefault()
-
-        const res = await axios.post('http://localhost:8000/api/addclient', client)
-
-        if (res.data.status === 200) {
+        
+        axios.put(`http://localhost:8000/api/updateclient/${client.id}`, client).then((res) =>
             console.log(res.data.message)
-            setClient(initialData)
-        }
+        )
+
+        // if (res.data.status === 200) {
+        //     
+        //     setClient(initialData)
+        // }
     }
 
     return (
         <div className="container py-5">
-            <div className="row">
-                <div className="col-12 col-md-8 d-flex justify-content-center">
-                    <div className="card flex-fill">
-                        <div className="card-header">
-                            <h3>Ajouter un client</h3>
-                        </div>
-                        <div className="card-body">
+        <div className="row">
+            <div className="col-12 col-md-8 d-flex justify-content-center">
+                <div className="card flex-fill">
+                    <div className="card-header">
+                        <h3>Edition d'un client</h3>
+                    </div>
+                    <div className="card-body">
+                        {
+                            loading ? (
+                                 <div className="spinner-border text-primary" role="status">
+                                <span className="sr-only">Loading...</span>
+                                </div>
+                            ) : (
+
                             <form action="" className="" onSubmit={handleSubmit}>
                                 <div className="form-group">
                                     <label htmlFor="name">Nom Complet du client</label>
@@ -71,14 +90,20 @@ const AddClient = () => {
                                         onChange={handleChange}
                                     />
                                 </div>
-                                <button type="submit" className="btn btn-primary">Ajouter</button>
+                                <select className="form-control" value={status} name="status" id="status" onChange={handleChange}>
+                                    <option value="true">Active</option>
+                                    <option value="false">Inactive</option>
+                                </select>
+                                <button type="submit" className="btn btn-primary mt-3">Editer</button>
                             </form>
-                        </div>
+                            )
+                        }
                     </div>
                 </div>
             </div>
         </div>
+    </div>
     )
 }
 
-export default AddClient
+export default EditClient

@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import axios from 'axios'
+import { useHistory } from 'react-router'
 
 const AddClient = () => {
     const initialData = {
@@ -9,6 +10,8 @@ const AddClient = () => {
         location: '',
         status: 'false'
     }
+
+    const history = useHistory()
 
     const [client, setClient] = useState(initialData)
 
@@ -26,6 +29,7 @@ const AddClient = () => {
         if (res.data.status === 200) {
             console.log(res.data.message)
             setClient(initialData)
+            history.push("/")
         }
     }
 

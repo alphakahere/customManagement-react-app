@@ -18,6 +18,14 @@ body {
   display: block;
 }
 
+.active{
+  background-color: green;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: block;
+}
+
 .action{
   background: #fff;
   width: 130px;

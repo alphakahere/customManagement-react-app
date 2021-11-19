@@ -1,5 +1,6 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
+import { useHistory } from 'react-router'
 
 const EditClient = (route) => {
     const initialData = {
@@ -11,6 +12,7 @@ const EditClient = (route) => {
     }
     const [client, setClient] = useState(initialData)
     const [loading, setloading] = useState(true)
+    const history = useHistory()
 
    
 
@@ -31,14 +33,13 @@ const EditClient = (route) => {
     const handleSubmit = async(e) => {
         e.preventDefault()
         
-        axios.put(`http://localhost:8000/api/updateclient/${client.id}`, client).then((res) =>
+        axios.put(`http://localhost:8000/api/updateclient/${client.id}`, client).then((res) =>{
             console.log(res.data.message)
-        )
+            history.push("/")
 
-        // if (res.data.status === 200) {
-        //     
-        //     setClient(initialData)
-        // }
+        })
+
+       
     }
 
     return (
